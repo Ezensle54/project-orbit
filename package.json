@@ -1,0 +1,26 @@
+{
+  "name": "orbit-friends-chat",
+  "version": "1.0.0",
+  "private": true,
+  "description": "A small self-hosted, real-time group chat for friends.",
+  "engines": {
+    "node": "22.x"
+  },
+  "scripts": {
+    "start": "node server.js",
+    "build:vercel": "npm run check",
+    "check": "node --check server.js && node --check public/script.js && node --check vercel/api.js && node --check \"api/[...path].js\""
+  },
+  "dependencies": {
+    "@neondatabase/serverless": "^1.2.0",
+    "ably": "^2.29.0",
+    "bcryptjs": "^3.0.2",
+    "better-sqlite3": "^12.2.0",
+    "express": "^5.1.0",
+    "express-rate-limit": "^8.1.0",
+    "express-session": "^1.18.2",
+    "helmet": "^8.1.0",
+    "socket.io": "^4.8.1",
+    "ws": "^8.22.0"
+  }
+}
