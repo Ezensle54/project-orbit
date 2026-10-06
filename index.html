@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="theme-color" content="#101116" />
+    <meta name="description" content="A cozy place to catch up with your favorite people." />
+    <title>Orbit — your little corner of the internet</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body class="auth-required">
+    <div class="app-shell">
+      <nav class="server-rail" aria-label="Servers">
+        <a class="brand-mark" href="#" aria-label="Orbit home">o<span>o</span></a>
+        <div class="rail-divider"></div>
+        <button class="server-icon add-server" id="addServer" title="Add a server" aria-label="Add a server">+</button>
+        <div class="rail-spacer"></div>
+        <button class="rail-profile avatar avatar-eli" title="Your profile" aria-label="Your profile">E<span class="presence-dot"></span></button>
+      </nav>
+
+      <aside class="sidebar">
+        <button class="server-heading" id="serverMenu" aria-label="Server menu">
+          <span class="server-heading-copy"><span class="eyebrow">YOUR SPACE</span><strong id="serverName">No spaces yet</strong></span>
+          <span class="chevron">⌄</span>
+        </button>
+        <div class="sidebar-scroll">
+          <div class="channel-category">
+            <div class="category-heading"><span>HANGOUT SPOTS</span><button class="add-channel" data-add-channel aria-label="Add a text channel">+</button></div>
+            <div class="channel-list" id="textChannels"></div>
+          </div>
+          <div class="channel-category voice-category">
+            <div class="category-heading"><span>VOICE LOUNGE</span><button class="add-channel" data-add-voice aria-label="Add a voice room">+</button></div>
+            <div class="voice-list" id="voiceChannels"></div>
+          </div>
+          <div class="sidebar-tip"><span class="tip-sparkle">✦</span><span>Good friends make<br />good days better.</span></div>
+        </div>
+        <div class="self-card">
+          <div class="avatar avatar-eli self-avatar">E<span class="presence-dot"></span></div>
+          <div class="self-copy"><strong id="currentUsername">You</strong><span id="selfStatus">online</span></div>
+          <button class="icon-button profile-settings" id="logoutButton" title="Sign out" aria-label="Sign out">↗</button>
+        </div>
+      </aside>
+
+      <main class="chat-panel">
+        <section class="empty-server-state" id="emptyServerState" aria-live="polite" hidden>
+          <span class="eyebrow">YOUR LITTLE CORNER OF THE INTERNET</span>
+          <h1>No spaces yet</h1>
+          <p>Create a space for your friends, then invite them to join.</p>
+          <button class="invite-button" id="createFirstServer" type="button">Create a space</button>
+        </section>
+        <header class="chat-header">
+          <button class="mobile-menu icon-button" id="mobileMenu" aria-label="Open channels">☰</button>
+          <div class="room-heading"><span class="room-hash">#</span><div><h1 id="roomTitle">general</h1><p id="roomDescription">the place for everything and nothing</p></div></div>
+          <div class="header-tools">
+            <span class="online-summary"><span class="online-dot"></span><span id="onlineCount">0</span> people here</span>
+            <button class="icon-button search-trigger" id="searchButton" aria-label="Search messages" title="Search messages">⌕</button>
+            <button class="invite-button" id="inviteButton"><span>↗</span> Invite friends</button>
+          </div>
+        </header>
+
+        <section class="message-area" id="messageArea" aria-label="Chat messages">
+          <div class="welcome-card" id="welcomeCard">
+            <div class="welcome-art"><span class="welcome-orbit"></span><span class="welcome-planet">✦</span></div>
+            <span class="eyebrow">A LITTLE SPACE OF YOUR OWN</span>
+            <h2>Welcome to <span>#general</span></h2>
+            <p>Good conversations start somewhere.<br />Make yourself at home and say hey.</p>
+            <button class="welcome-invite" id="welcomeInvite">Bring your friends in <span>↗</span></button>
+          </div>
+          <div class="date-divider"><span id="dateLabel"></span></div>
+          <div class="message-list" id="messageList" aria-live="polite"></div>
+        </section>
+
+        <form class="composer" id="chatForm">
+          <button class="composer-plus" type="button" id="attachButton" aria-label="Add a sparkle">+</button>
+          <input id="messageInput" type="text" placeholder="Message #general" maxlength="500" autocomplete="off" aria-label="Write a message" />
+          <div class="composer-actions"><button type="button" class="composer-emoji" id="emojiButton" title="Add a smile" aria-label="Add a smile">☺</button><button class="send-button" type="submit" aria-label="Send message">↑</button></div>
+        </form>
+        <div class="keyboard-hint">A little kindness goes a long way <span>✦</span></div>
+      </main>
+
+      <aside class="people-panel">
+        <div class="people-top"><div><span class="eyebrow">YOUR PEOPLE</span><h2>Members <span id="friendsTotal">0</span></h2></div><button class="icon-button invite-small" id="inviteSmall" aria-label="Invite friends" title="Invite friends">＋</button></div>
+        <div class="friend-group"><div class="friend-group-title"><span class="status-dot online"></span>ONLINE <span class="group-count" id="onlineMembersCount">0</span></div>
+          <div id="onlineMembers"></div>
+        </div>
+        <div class="friend-group offline-group"><div class="friend-group-title"><span class="status-dot offline"></span>OFFLINE <span class="group-count" id="offlineMembersCount">0</span></div>
+          <div id="offlineMembers"></div>
+        </div>
+        <div class="people-footer"><span class="footer-star">✳</span><span>One little space,<br /><strong>your people.</strong></span></div>
+      </aside>
+    </div>
+    <div class="toast" id="toast" role="status" aria-live="polite"></div>
+    <dialog class="search-dialog" id="searchDialog">
+      <form method="dialog" class="search-box" id="searchForm">
+        <div class="search-box-heading"><div><span class="eyebrow">FIND THAT THING</span><h2>Search messages</h2></div><button class="icon-button close-search" type="button" aria-label="Close search">×</button></div>
+        <label class="search-input-wrap"><span>⌕</span><input id="searchInput" type="search" placeholder="Try “movie night”..." autocomplete="off" /></label>
+        <div class="search-results" id="searchResults"><p class="search-empty">Search across your chats to find a message.</p></div>
+      </form>
+    </dialog>
+    <dialog class="search-dialog" id="createServerDialog">
+      <form class="search-box" id="createServerForm">
+        <div class="search-box-heading"><div><span class="eyebrow">MAKE IT YOURS</span><h2>Create a space</h2></div><button class="icon-button close-search" id="closeCreateServer" type="button" aria-label="Close">×</button></div>
+        <label class="create-server-label" for="createServerName">Space name</label>
+        <input class="create-server-input" id="createServerName" name="name" maxlength="32" required autocomplete="off" placeholder="Our friend group" />
+        <p class="auth-error" id="createServerError" role="alert" hidden></p>
+        <div class="create-server-actions"><button class="create-server-cancel" id="cancelCreateServer" type="button">Cancel</button><button class="auth-submit" id="submitCreateServer" type="submit">Create space</button></div>
+      </form>
+    </dialog>
+    <section class="auth-gate" id="authGate" aria-label="Sign in to Orbit">
+      <div class="auth-card">
+        <a class="brand-mark auth-brand" href="#" aria-label="Orbit">o<span>o</span></a>
+        <span class="eyebrow">YOUR LITTLE CORNER OF THE INTERNET</span>
+        <h1 id="authTitle">Good to have you back.</h1>
+        <p class="auth-description" id="authDescription">Sign in to pick up where your friends left off.</p>
+        <form class="auth-form" id="authForm">
+          <label for="authUsername">Username</label>
+          <input id="authUsername" name="username" autocomplete="username" minlength="2" maxlength="24" pattern="[A-Za-z0-9_]+" required />
+          <label for="authPassword">Password</label>
+          <input id="authPassword" name="password" type="password" autocomplete="current-password" minlength="10" maxlength="72" required />
+          <p class="auth-hint" id="authHint">Use your account username and password.</p>
+          <p class="auth-error" id="authError" role="alert" hidden></p>
+          <button class="auth-submit" id="authSubmit" type="submit">Sign in</button>
+        </form>
+        <button class="auth-switch" id="authSwitch" type="button">New here? <strong>Create an account</strong></button>
+        <p class="auth-footnote">A little home for your group chats.</p>
+      </div>
+    </section>
+    <script src="https://cdn.ably.com/lib/ably.min-2.js"></script>
+    <script src="script.js"></script>
+  </body>
+</html>
