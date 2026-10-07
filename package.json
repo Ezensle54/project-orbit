@@ -8,8 +8,10 @@
   },
   "scripts": {
     "start": "node server.js",
-    "build:vercel": "npm run check",
-    "check": "node --check server.js && node --check public/script.js && node --check vercel/api.js && node --check \"api/[...path].js\""
+    "build:vercel": "npm run check:vercel",
+    "check": "npm run check:local && npm run check:vercel",
+    "check:local": "node --check server.js && node --check public/script.js",
+    "check:vercel": "node --check public/script.js && node --check vercel/api.js && node --check \"api/[...path].js\""
   },
   "dependencies": {
     "@neondatabase/serverless": "^1.2.0",
