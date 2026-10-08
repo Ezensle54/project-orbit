@@ -251,17 +251,18 @@ function rateLimit(scope, max, windowMs, message) {
     try {
       const key = `${scope}:${req.ip}`;
       const now = Date.now();
+      const resetAt = now + windowMs;
       const result = await pool.query(`
-        INSERT INTO rate_limits (id, hits, reset_at) VALUES ($1, 1, $2 + $3)
+        INSERT INTO rate_limits (id, hits, reset_at) VALUES ($1, 1, $3)
         ON CONFLICT (id) DO UPDATE SET
           hits = CASE WHEN rate_limits.reset_at <= $2 THEN 1 ELSE rate_limits.hits + 1 END,
-          reset_at = CASE WHEN rate_limits.reset_at <= $2 THEN $2 + $3 ELSE rate_limits.reset_at END
+          reset_at = CASE WHEN rate_limits.reset_at <= $2 THEN $3 ELSE rate_limits.reset_at END
         RETURNING hits, reset_at
-      `, [key, now, windowMs]);
-      const { hits, reset_at: resetAt } = result.rows[0];
+      `, [key, now, resetAt]);
+      const { hits, reset_at: limitResetAt } = result.rows[0];
       res.set('RateLimit-Limit', String(max));
       res.set('RateLimit-Remaining', String(Math.max(0, max - hits)));
-      res.set('RateLimit-Reset', String(Math.ceil((resetAt - now) / 1000)));
+      res.set('RateLimit-Reset', String(Math.ceil((limitResetAt - now) / 1000)));
       if (hits > max) return sendError(res, 429, message);
       next();
     } catch (error) {
