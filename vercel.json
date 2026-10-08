@@ -1,7 +1,6 @@
 {
   "version": 2,
   "buildCommand": "npm run build:vercel",
-  "outputDirectory": "public",
   "functions": {
     "api/[...path].js": {
       "maxDuration": 15

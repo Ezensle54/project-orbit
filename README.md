@@ -12,7 +12,7 @@ Orbit is a small group chat. The local setup uses Node.js, SQLite, and Socket.IO
    npm start
    ```
 
-3. Open [http://localhost:3000](http://localhost:3000) and create an account. Share the app's hosted HTTPS address with friends so they can create their own accounts.
+3. `npm start` prepares the local `public/` files from the root website assets and starts the server. Open [http://localhost:3000](http://localhost:3000) and create an account. Share the app's hosted HTTPS address with friends so they can create their own accounts.
 
 The first run creates `data/orbit.sqlite` and a random development session secret in `data/session-secret`. No spaces are created automatically: create one after signing up, then invite your friends. After the first account, registration requires a server invitation. On existing local databases, startup removes the three old starter spaces (`The Hideout`, `Side Quest`, and `Study Buddies`) and their contents. Keep the `data` folder private: it holds account password hashes, chat history, invitations, and session secrets. It is excluded from Git and Vercel uploads.
 
@@ -22,7 +22,7 @@ The Vercel deployment is a separate serverless backend; it cannot use the local 
 
 1. Create a Neon Postgres database and copy its **pooled** connection string.
 2. Create an Ably app and a private server-side API key with publish, subscribe, and presence access. The server uses this key to issue scoped client tokens; keep the key private.
-3. Import this project into Vercel from the repository root. The build creates `public/` from the root `index.html`, `script.js`, and `styles.css` when that folder is absent, then Vercel serves `public/` and routes `/api/*` to serverless functions. This also supports GitHub uploads that contain the website files at the repository root.
+3. Import this project into Vercel with the **Root Directory** set to the repository root. Keep the HTML, CSS, and JavaScript files at the repository root; Vercel serves them directly and deploys `api/[...path].js` as the API function. Do not configure a separate output directory.
 4. Add these project environment variables in Vercel for **Development**, **Preview**, and **Production**:
    - `DATABASE_URL`: the pooled Neon connection string.
    - `SESSION_SECRET`: a random secret of at least 32 characters. Generate one with `node -e "console.log(require('node:crypto').randomBytes(48).toString('base64url'))"`.
