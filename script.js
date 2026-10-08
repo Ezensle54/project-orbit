@@ -64,7 +64,11 @@ async function api(url, options = {}) {
     throw new Error('Orbit cannot reach its server. Start the backend and try again.');
   }
   if (response.status === 204) return null;
-  const payload = await response.json().catch(() => ({ error: 'The server returned an invalid response.' }));
+  const payload = await response.json().catch(() => null);
+  if (!payload || typeof payload !== 'object' || Array.isArray(payload)) {
+    const contentType = response.headers.get('content-type') || 'unknown content type';
+    throw new Error(`The server returned an invalid response (HTTP ${response.status}, ${contentType}). Check the Vercel API function and deployment logs.`);
+  }
   if (!response.ok) {
     if (response.status === 401 && state.user) {
       await signOut(false);
