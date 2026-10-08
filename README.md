@@ -22,7 +22,7 @@ The Vercel deployment is a separate serverless backend; it cannot use the local 
 
 1. Create a Neon Postgres database and copy its **pooled** connection string.
 2. Create an Ably app and a private server-side API key with publish, subscribe, and presence access. The server uses this key to issue scoped client tokens; keep the key private.
-3. Import this project into Vercel with the **Root Directory** set to the repository root. Keep the HTML, CSS, and JavaScript files at the repository root; Vercel serves them directly and deploys `api/[...path].js` as the API function. Do not configure a separate output directory.
+3. Import this project into Vercel with the **Root Directory** set to the repository root. The Vercel config disables Express framework detection, copies the root HTML, CSS, and JavaScript files into `public/`, and deploys `api/[...path].js` as the API function. Keep Vercel's Output Directory set to `public` (or use the value from `vercel.json`).
 4. Add these project environment variables in Vercel for **Development**, **Preview**, and **Production**:
    - `DATABASE_URL`: the pooled Neon connection string.
    - `SESSION_SECRET`: a random secret of at least 32 characters. Generate one with `node -e "console.log(require('node:crypto').randomBytes(48).toString('base64url'))"`.
